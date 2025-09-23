@@ -1,0 +1,29 @@
+name: CI
+on:
+  workflow_dispatch:
+  push:
+    tags: [ v* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: nixbuild/nix-quick-install-action@v33
+
+      - run: nix flake check
+      - run: nix build .#magiskModule.installer
+
+      - name: Get artifact name
+        id: get-artifact-name
+        run: |
+          echo "ARTIFACT_NAME=$(basename result/installer-zip/*)" >> "$GITHUB_OUTPUT"
+          echo "**Warning:** The installer zip is double-zipped. See https://github.com/actions/upload-artifact/issues/426 for more information." >> $GITHUB_STEP_SUMMARY
+          printf '\n## Correct SHA-256 digest:\n\n```\n%s\n```\n' "$(sha256sum result/installer-zip/*)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.get-artifact-name.outputs.ARTIFACT_NAME }}
+          path: result/installer-zip/*

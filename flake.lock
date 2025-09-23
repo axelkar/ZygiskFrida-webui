@@ -1,0 +1,43 @@
+{
+  "nodes": {
+    "magisk-module-nix": {
+      "locked": {
+        "lastModified": 1758619794,
+        "narHash": "sha256-wHeeUt5ahX8eT6xDjJiz+qRj36wNNwmG0+b9Rk8Y+Jk=",
+        "owner": "axelkar",
+        "repo": "magisk-module-nix",
+        "rev": "44ef1d9cd9970b86c9f79a719d598c99c5520b7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "axelkar",
+        "repo": "magisk-module-nix",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1758346548,
+        "narHash": "sha256-afXE7AJ7MY6wY1pg/Y6UPHNYPy5GtUKeBkrZZ/gC71E=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "b2a3852bd078e68dd2b3dfa8c00c67af1f0a7d20",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "magisk-module-nix": "magisk-module-nix",
+        "nixpkgs": "nixpkgs"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

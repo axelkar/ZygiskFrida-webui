@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+	--color-primary-background: var(--color-slate-800);
+	--color-secondary-background: var(--color-slate-700);
+	--color-secondary-background-disabled: var(--color-slate-400);
+}
+
+@layer base {
+	:root {
+		@apply text-gray-300 bg-primary-background font-sans;
+	}
+
+	body {
+		@apply m-0;
+	}
+}
+
+.modal-content {
+	@apply bg-primary-background m-2 p-4 rounded-xl;
+}
+
+.modal-overlay {
+	@apply bg-black/20 h-screen fixed inset-0 transition-opacity;
+	overflow: auto;
+	overflow-wrap: anywhere;
+	opacity: 0;
+}
+.ReactModal__Overlay--after-open {
+	opacity: 1;
+}
+.ReactModal__Overlay--before-close {
+	opacity: 0;
+}
+body.ReactModal__Body--open {
+	overflow: hidden;
+}
+
+.package-icon-container,
+.package-icon-container img,
+.icon-placeholder {
+	@apply w-12 h-12;
+}
+
+.icon-placeholder {
+	@apply bg-neutral-500 rounded-full font-bold content-center;
+}
+
+/* Old Tailwind CSS version in bun-plugin-tailwind */
+.items-baseline-last {
+	align-items: last baseline;
+}
