@@ -7,24 +7,15 @@
   };
 
   outputs =
-    { self, nixpkgs, magisk-module-nix }:
-    let
-      # System types to support.
-      targetSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "aarch64-darwin"
-      ];
-
-      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
-      forAllSystems = nixpkgs.lib.genAttrs targetSystems;
-    in
     {
-      packages = forAllSystems (
-        system:
+      self,
+      nixpkgs,
+      magisk-module-nix,
+    }:
+    {
+      packages = builtins.mapAttrs (
+        system: pkgs:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
           fetchBunDeps = pkgs.callPackage (
             {
               stdenvNoCC,
@@ -151,18 +142,19 @@
 
           default = magiskModule.installer;
         }
-      );
-      checks = forAllSystems (
-        system:
+      ) nixpkgs.legacyPackages;
+      checks = builtins.mapAttrs (
+        system: packages:
         assert
           (builtins.fromJSON (builtins.readFile ./magisk-update.json))
-          == (builtins.fromJSON self.packages.${system}.magiskModule.passthru.magiskUpdateJSON)
-          ||
-            builtins.throw ("magisk-update.json is out of date.\n"
-            + "Run `nix eval --raw .#magiskModule.passthru.magiskUpdateJSON > magisk-update.json`");
+          == (builtins.fromJSON packages.magiskModule.passthru.magiskUpdateJSON)
+          || builtins.throw (
+            "magisk-update.json is out of date.\n"
+            + "Run `nix eval --raw .#magiskModule.passthru.magiskUpdateJSON > magisk-update.json`"
+          );
         {
-          inherit (self.packages.${system}) default;
+          inherit (packages) default;
         }
-      );
+      ) self.packages;
     };
 }
